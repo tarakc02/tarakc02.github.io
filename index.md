@@ -2,7 +2,7 @@
 layout: default
 class: default
 title: TS - Home
-permalink: /index/
+permalink: /
 ---
 
 Welcome. Check out the [projects](/projects) page for packages and projects.
