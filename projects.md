@@ -2,6 +2,7 @@
 layout: default
 class: projects
 title: TS - Projects
+permalink: /projects/
 ---
 
 Here's some things I've been working on recently:
