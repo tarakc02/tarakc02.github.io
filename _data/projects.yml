@@ -1,0 +1,19 @@
+- name: ratelimitr
+  github: tarakc02/ratelimitr
+  description: An R package to constrain one or more functions. I made this to make it easier to build packages that utilize web APIs. It's now on <a href="https://cran.r-project.org/package=ratelimitr">CRAN</a>.
+
+- name: rmapzen
+  github: tarakc02/rmapzen
+  description: An R package to work with the <a href="https://mapzen.com/documentation/">Mapzen API</a>. Thorough documentation (with examples) are avaialable at <a href="https://tarakc02.github.io/rmapzen">the github pages site</a>
+
+- name: discoveryengine
+  github: tarakc02/discoveryengine
+  description: At my work, we created a tool to define populations of database entities using a simple predicate-based language. Documentation and examples at <a href="https://tarakc02.github.io/discodocs/">Disco Docs</a>
+
+- name: lazylist
+  github: tarakc02/lazylist
+  description: An implementation of lazily evaluated lists for R, based on the description found in <i><a href="https://mitpress.mit.edu/sicp/full-text/book/book-Z-H-24.html">Structure and Interpretation of Computer Programs</a></i>. To see lazy lists in practice, <a href="http://rpubs.com/tarakc02/taxicab">Searching for taxicab numbers</a>
+
+- name: rbst
+  github: tarakc02/rbst
+  description: Purely functional balanced search trees implemented in R. 

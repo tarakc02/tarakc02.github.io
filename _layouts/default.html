@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<title>{{ page.title }}</title>
+			<!-- link to main stylesheet -->
+			<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+		</head>
+		<body class = {{ page.class }} >
+			<nav>
+				<ul>
+ 					{% for section in site.sections %}
+                	<li><a href="/{{ section }}/" class="{{ section }}">{{ section }}</a></li>
+                	{% endfor %}
+                </ul>
+			</nav>
+			<div class="container">
+			
+			{{ content }}
+			
+			</div><!-- /.container -->
+			<footer>
+	    		<ul>
+	        		<li><a href="https://github.com/tarakc02">github.com/tarakc02</a></li>
+				</ul>
+			</footer>
+		</body>
+	</html>
