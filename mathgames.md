@@ -2,7 +2,6 @@
 layout: default
 class: mathgames
 title: TS - Math Games
-permalink: /mathgames/
 ---
 
 Little mathy things to pass the time.
