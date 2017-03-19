@@ -94,7 +94,7 @@
 			"file": "mathgames.md",
 			"settings":
 			{
-				"buffer_size": 409,
+				"buffer_size": 584,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -244,9 +244,7 @@
 	},
 	"expanded_folders":
 	[
-		"/home/tarak/Documents/tarakc02.github.io",
-		"/home/tarak/Documents/tarakc02.github.io/_site/assets/css",
-		"/home/tarak/Documents/tarakc02.github.io/assets/css"
+		"/home/tarak/Documents/tarakc02.github.io"
 	],
 	"file_history":
 	[
@@ -538,15 +536,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 409,
+						"buffer_size": 584,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								59,
-								59
+								0,
+								0
 							]
 						],
 						"settings":
@@ -579,6 +577,7 @@
 						],
 						"settings":
 						{
+							"git_gutter_enabled": true,
 							"syntax": "Packages/HTML/HTML.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},

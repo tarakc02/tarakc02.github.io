@@ -29,7 +29,7 @@ body {
   color: $text-color;
   background-color: $background-color;
   margin: 60px auto;
-  width: 70%;
+  width: 80%;
   -webkit-text-size-adjust: 100%;
   -webkit-font-feature-settings: "kern" 1;
      -moz-font-feature-settings: "kern" 1;
@@ -79,10 +79,16 @@ figcaption {
  * Lists
  */
 ul, ol {
-  margin-left: $spacing-unit;
+  margin-left: 0 * $spacing-unit;
+  margin-right: $spacing-unit;
+}
+
+ul {
+  list-style-type: none;
 }
 
 li {
+  margin-bottom: .5 * $base-font-size;
   > ul,
   > ol {
     margin-bottom: 0;
