@@ -13,8 +13,16 @@
 	src: url('/assets/fonts/OpenSans-Bold-webfont.woff');
     font-weight: bold;
     font-style: normal;
-
 }
+
+@font-face {
+    font-family: 'Open Sans';
+    src: local('Open Sans');
+	src: url('/assets/fonts/OpenSans-Italic-webfont.woff');
+    font-weight: normal;
+    font-style: italic;
+}
+
 
 $base-font-family: 'Open Sans', sans-serif !default;
 $monospace-font-family: Consolas, "Latin Modern Mono", Inconsolata, monospace;
