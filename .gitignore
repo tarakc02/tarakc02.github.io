@@ -4,3 +4,4 @@ _site
 *.sublime-project
 .Rproj.user
 */*_cache/**
+.Rhistory

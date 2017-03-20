@@ -12,7 +12,7 @@
 
 - name: lazylist
   github: tarakc02/lazylist
-  description: An implementation of lazily evaluated lists for R, based on the description found in <i><a href="https://mitpress.mit.edu/sicp/full-text/book/book-Z-H-24.html">Structure and Interpretation of Computer Programs</a></i>. To see lazy lists in practice, <a href="http://rpubs.com/tarakc02/taxicab">Searching for taxicab numbers</a>
+  description: An implementation of lazily evaluated lists for R, based on the description found in <i><a href="https://mitpress.mit.edu/sicp/full-text/book/book-Z-H-24.html">Structure and Interpretation of Computer Programs</a></i>. To see lazy lists in practice, <a href="/taxicab">Searching for taxicab numbers</a>
 
 - name: rbst
   github: tarakc02/rbst

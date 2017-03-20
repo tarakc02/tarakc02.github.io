@@ -28,7 +28,7 @@
 
 
 $base-font-family: 'Open Sans', sans-serif !default;
-$monospace-font-family: Consolas, "Latin Modern Mono", Inconsolata, monospace;
+$monospace-font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !default;
 $base-font-size:   16px !default;
 $base-font-weight: 400 !default;
 $small-font-size:  $base-font-size * 0.875 !default;
@@ -41,7 +41,7 @@ $background-color: lighten(#eabe94, 25%) !default;
 $brand-color: #f2300f !default;
 
 $grey-color:       #0b775e !default;
-$grey-color-light: lighten($grey-color, 40%) !default;
+$grey-color-light: lighten($grey-color, 60%) !default;
 $grey-color-dark:  darken($grey-color, 25%) !default;
 
 // Width of the content area

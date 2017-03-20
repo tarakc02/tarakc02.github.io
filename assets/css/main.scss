@@ -149,15 +149,15 @@ blockquote {
  */
 pre,
 code {  
-  font-size: 15px;
+  font-size: 13px;
   border: 1px solid $grey-color;
-  background: lighten($grey-color-light, 33%);
+  background: lighten($grey-color-light, 15%);
   border-radius: 3px;  
 }
 
 code {
   font-family: $monospace-font-family;
-  padding: 0px 5px;
+  padding: 1px 5px;
 }
 
 pre {
@@ -171,7 +171,7 @@ pre {
   }
 }
 
-.highlight  { background: lighten($grey-color-light, 33%); }
+.highlight  { background: lighten($grey-color-light, 15%); }
 .highlight .c { color: #999988; font-style: italic } /* Comment */
 .highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .highlight .k { font-weight: bold } /* Keyword */
@@ -254,11 +254,11 @@ pre {
   }
 
   @include media-query($on-palm) {
-    $content-width: 45em;
-    max-width: -webkit-calc(#{$content-width} - (#{$spacing-unit}));
-    max-width:         calc(#{$content-width} - (#{$spacing-unit}));
-    padding-right: $spacing-unit / 2;
-    padding-left: $spacing-unit / 2;
+    //$content-width: 45em;
+    max-width: -webkit-calc(#{$content-width} - 0);
+    max-width:         calc(#{$content-width} - 0);
+    padding-right: 0;
+    padding-left: 0;
     nav ul li, footer ul li {
       display: list-item;      
       line-height: 100%
