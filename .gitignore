@@ -2,3 +2,5 @@ _site
 .sass-cache
 .jekyll-metadata
 *.sublime-project
+.Rproj.user
+*/*_cache/**
