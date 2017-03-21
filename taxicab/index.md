@@ -1,6 +1,7 @@
 ---
 layout: default
 class: default
+title: TS - Searching for Ramanujan's taxicab numbers
 ---
 
 > I remember once going to see him (Ramanujan) when he was lying ill at

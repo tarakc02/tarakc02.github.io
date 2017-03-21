@@ -1,6 +1,7 @@
 ---
 layout: default
 class: default
+title: TS - The Median Game
 ---
 
 Introduction

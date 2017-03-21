@@ -3,7 +3,6 @@ output:
     md_document:
         includes:
             in_header: hdr
-title: The Median Game
 ---
 
 >I remember once going to see him (Ramanujan) when he was lying ill at Putney. I had ridden in taxi-cab No. 1729, and remarked that the number seemed to be rather a dull one, and that I hoped it was not an unfavourable omen. "No", he replied, "it is a very interesting number; it is the smallest number expressible as the sum of two [positive] cubes in two different ways.
