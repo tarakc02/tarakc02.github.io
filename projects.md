@@ -1,6 +1,6 @@
 ---
 layout: default
-class: projects
+class: default
 title: TS - Projects
 ---
 

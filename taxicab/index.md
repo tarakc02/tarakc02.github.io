@@ -1,6 +1,6 @@
 ---
 layout: default
-class: default
+class: writeup
 title: TS - Searching for Ramanujan's taxicab numbers
 ---
 

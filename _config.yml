@@ -28,9 +28,12 @@ author:
   github_username:  tarakc02
 
 sections:
-  - index
-  - projects
-  - mathgames
+  - name: home
+    link: index
+  - name: r-pkgs
+    link: projects
+  - name: writeups
+    link: mathgames
 
 sass:
   sass_dir: _sass
@@ -43,3 +46,8 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - tarakc02.github.io.sublime-project
+  - "*.Rmd"
+  - "*/hdr"
+  - "*_cache"
+  - "*.sublime-workspace"
+  - "*.Rproj"

@@ -4,7 +4,7 @@ class: default
 title: TS - Home
 ---
 
-Hi I'm Tarak. I work as a data analyst in Prospect Development at UC Berkeley, but this site is just for fiddling around. The [projects](/projects) page has some R packages I've developed. I can't commit to a regular blog, but sometimes I like to write up little [mathgames](/mathgames).
+Hi I'm Tarak. I work as a data analyst in Prospect Development at UC Berkeley, but this site is just for fiddling around. The [r packages](/projects) page has some R packages I've developed. I can't commit to a regular blog, but sometimes I do little [write-ups](/mathgames).
 
 Where else I can be found:
 

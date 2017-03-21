@@ -8,10 +8,10 @@
 		</head>
 		<body class = {{ page.class }} >
 		<div class = "wrapper">
-			<nav>
+			<nav class = "nav">
 				<ul>
  					{% for section in site.sections %}
-                	<li><a href="/{{ section }}" class="{{ section }}">{{ section }}</a></li>
+                	<li><a href="/{{ section.link }}">{{ section.name }}</a></li>
                 	{% endfor %}
                 </ul>
 			</nav>
@@ -20,7 +20,7 @@
 			{{ content }}
 			
 			</div><!-- /.container -->
-			<footer>
+			<footer class = "nav">
 	    		<ul>
 	        		<li><a href="https://github.com/tarakc02">github.com/tarakc02</a></li>
 				</ul>

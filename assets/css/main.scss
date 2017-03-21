@@ -78,16 +78,16 @@ figcaption {
 /**
  * Lists
  */
-ul, ol {
+.default ul, ol {
   margin-left: 0 * $spacing-unit;
   margin-right: $spacing-unit;
 }
 
-ul {
+.default ul {
   list-style-type: none;
 }
 
-li {
+.default li {
   margin-bottom: .5 * $base-font-size;
   line-height: 120%;
   > ul,
@@ -95,7 +95,11 @@ li {
     margin-bottom: 0;
   }
 }
-
+.writeup ul, ol {
+  margin-left: $spacing-unit;
+  line-height: 120%;
+  > li {margin-bottom: .5 * $base-font-size;}
+}
 
 
 /**
@@ -291,14 +295,14 @@ pre {
   }
 }
 
-nav ul, footer ul {
+.nav ul, footer ul {
     padding: 0px;
     list-style: none;
     font-weight: bold;
     margin-left: 0px;
 }
 
-nav ul li, footer ul li {
+.nav ul li, footer ul li {
     display: inline;
     margin-right: 20px;
 }
