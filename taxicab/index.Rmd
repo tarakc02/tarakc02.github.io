@@ -1,9 +1,17 @@
 ---
 output: 
     md_document:
+        variant: markdown_strict+fenced_code_blocks
         includes:
             in_header: hdr
 ---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+knitr::knit_hooks$set(source = function(x, options) {
+    x <- paste0("\n~~~~~r\n", paste0(x, collapse = "\n"), "\n~~~~~\n")
+    x
+})
+```
 
 >I remember once going to see him (Ramanujan) when he was lying ill at Putney. I had ridden in taxi-cab No. 1729, and remarked that the number seemed to be rather a dull one, and that I hoped it was not an unfavourable omen. "No", he replied, "it is a very interesting number; it is the smallest number expressible as the sum of two [positive] cubes in two different ways.
 
@@ -97,6 +105,7 @@ taxicab_values[100]
 ```
 
 Finding the associated pairs is also simple:
+
 ```{r find_taxicabs3}
 format_pair <- function(pair) paste(pair, collapse = ", ")
 print_pairs <- function(pair1, pair2) 

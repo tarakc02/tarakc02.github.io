@@ -53,16 +53,18 @@ unthinkable with a regular list.
 I decided to implement streams in R, in the package `lazylist` ([on
 Github](https://github.com/tarakc02/lazylist)).
 
-    library(lazylist)
+~~~~ r
+library(lazylist)
 
-    # cons_stream generates a stream
-    # notice the recursive definition
-    integers_starting_from <- function(k) {
-        cons_stream(k, integers_starting_from(k + 1))
-    }
+# cons_stream generates a stream
+# notice the recursive definition
+integers_starting_from <- function(k) {
+    cons_stream(k, integers_starting_from(k + 1))
+}
 
-    integers <- integers_starting_from(0)
-    integers
+integers <- integers_starting_from(0)
+integers
+~~~~
 
     ## |   0 
     ## |   1 
@@ -71,16 +73,22 @@ Github](https://github.com/tarakc02/lazylist)).
     ## |   4 
     ## |   ...
 
-    integers[1E4]
+~~~~ r
+integers[1E4]
+~~~~
 
     ## [1] 9999
 
-    # accessor functions
-    stream_car(integers)
+~~~~ r
+# accessor functions
+stream_car(integers)
+~~~~
 
     ## [1] 0
 
-    stream_cdr(integers)
+~~~~ r
+stream_cdr(integers)
+~~~~
 
     ## |   1 
     ## |   2 
@@ -93,12 +101,14 @@ Elements of the stream are lazily evaluated as needed, but the evaluated
 values are cached so that we can avoid the cost of re-calculating
 values.
 
-    fib <- function(a, b) {
-        cons_stream(a, fib(b, a + b))
-    }
+~~~~ r
+fib <- function(a, b) {
+    cons_stream(a, fib(b, a + b))
+}
 
-    fibonacci <- fib(0, 1)
-    print(fibonacci, n = 10)
+fibonacci <- fib(0, 1)
+print(fibonacci, n = 10)
+~~~~
 
     ## |   0 
     ## |   1 
@@ -120,8 +130,10 @@ much value over a memoized function. However, they turn out to be a
 powerful abstraction when we think of them as lists, and apply
 functionals such as `map` and `filter`.
 
-    squares <- stream_map(integers, function(x) x**2)
-    print(squares, n = 10)
+~~~~ r
+squares <- stream_map(integers, function(x) x**2)
+print(squares, n = 10)
+~~~~
 
     ## |   0 
     ## |   1 
@@ -135,8 +147,10 @@ functionals such as `map` and `filter`.
     ## |   81 
     ## |   ...
 
-    # find fibonacci numbers that are divisible by 3:
-    stream_filter(fibonacci, function(x) !(x %% 3))
+~~~~ r
+# find fibonacci numbers that are divisible by 3:
+stream_filter(fibonacci, function(x) !(x %% 3))
+~~~~
 
     ## |   0 
     ## |   3 
@@ -156,9 +170,11 @@ product of two streams, with the additional property that the pairs are
 ordered by a user-supplied weighting function. I'll generate pairs that
 are ordered by the sum of their cubes.
 
-    ordered_pairs <- weighted_pairs(integers, integers, 
-                                    weight = function(x) sum(x**3))
-    ordered_pairs
+~~~~ r
+ordered_pairs <- weighted_pairs(integers, integers, 
+                                weight = function(x) sum(x**3))
+ordered_pairs
+~~~~
 
     ## |   0 0 
     ## |   0 1 
@@ -175,19 +191,21 @@ to shifting the entire sequence to the left by one element. Notice that
 `stream_map` here is able to take multiple streams and a function with
 the appropriate number of arguments.
 
-    library(magrittr)
+~~~~ r
+library(magrittr)
 
-    # stream of indexes of taxicab numbers
-    is_taxicab <- stream_map(list(ordered_pairs,
-                                  shift_left(ordered_pairs)),
-                             function(x, y) sum(x**3) == sum(y**3))
+# stream of indexes of taxicab numbers
+is_taxicab <- stream_map(list(ordered_pairs,
+                              shift_left(ordered_pairs)),
+                         function(x, y) sum(x**3) == sum(y**3))
 
-    taxicab_values <- ordered_pairs %>% 
-        stream_at(is_taxicab) %>%
-        stream_map(function(x) sum(x**3))
+taxicab_values <- ordered_pairs %>% 
+    stream_at(is_taxicab) %>%
+    stream_map(function(x) sum(x**3))
 
-    # the first 5 taxicab numbers
-    taxicab_values
+# the first 5 taxicab numbers
+taxicab_values
+~~~~
 
     ## |   1729 
     ## |   4104 
@@ -196,24 +214,28 @@ the appropriate number of arguments.
     ## |   32832 
     ## |   ...
 
-    # and we can go as far out as we like:
-    taxicab_values[100]
+~~~~ r
+# and we can go as far out as we like:
+taxicab_values[100]
+~~~~
 
     ## [1] 4673088
 
 Finding the associated pairs is also simple:
 
-    format_pair <- function(pair) paste(pair, collapse = ", ")
-    print_pairs <- function(pair1, pair2) 
-        paste("(", pair1, ") (", pair2, ")", sep = "")
+~~~~ r
+format_pair <- function(pair) paste(pair, collapse = ", ")
+print_pairs <- function(pair1, pair2) 
+    paste("(", pair1, ") (", pair2, ")", sep = "")
 
-    taxicab_pairs <- 
-        stream_map(list(ordered_pairs,
-                        shift_left(ordered_pairs)), 
-                   function(x, y) print_pairs(format_pair(x), format_pair(y))) %>%
-        stream_at(is_taxicab)
+taxicab_pairs <- 
+    stream_map(list(ordered_pairs,
+                    shift_left(ordered_pairs)), 
+               function(x, y) print_pairs(format_pair(x), format_pair(y))) %>%
+    stream_at(is_taxicab)
 
-    taxicab_pairs
+taxicab_pairs
+~~~~
 
     ## |   (1, 12) (9, 10) 
     ## |   (2, 16) (9, 15) 
@@ -222,6 +244,8 @@ Finding the associated pairs is also simple:
     ## |   (4, 32) (18, 30) 
     ## |   ...
 
-    taxicab_pairs[100]
+~~~~ r
+taxicab_pairs[100]
+~~~~
 
     ## [1] "(25, 167) (64, 164)"

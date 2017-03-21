@@ -41,21 +41,25 @@ Set up
 
 First we set up the API for the stack data structure:
 
-    peak <- function(s) UseMethod("peak")
-    push <- function(s, new_item) UseMethod("push")
-    without_top <- function(s) UseMethod("without_top")
-    size <- function(s) UseMethod("size")
+~~~~ r
+peak <- function(s) UseMethod("peak")
+push <- function(s, new_item) UseMethod("push")
+without_top <- function(s) UseMethod("without_top")
+size <- function(s) UseMethod("size")
+~~~~
 
 And it would probably be helpful to have a reasonable print method
 
-    print.stack <- function(s) {
-        cat("A stack of size", size(s))
-        if (size(s) > 0L) {
-            cat("\nTop:\n") 
-            str(peak(s))
-        }
-        invisible(s)
+~~~~ r
+print.stack <- function(s) {
+    cat("A stack of size", size(s))
+    if (size(s) > 0L) {
+        cat("\nTop:\n") 
+        str(peak(s))
     }
+    invisible(s)
+}
+~~~~
 
 The base case
 -------------
@@ -63,19 +67,21 @@ The base case
 And now we implement a constructor for an empty stack. In the process,
 we end up implementing `peak`, `without_top`, and `size`.
 
-    # an empty stack should just be a function that returns the expected values
-    stack <- function() {
-        f <- function(query) 
-            switch(query, 
-                   peak = NULL,
-                   without_top = stop("Stack is already empty", call. = FALSE),
-                   size = 0L)
-        structure(f, class = "stack")
-    }
+~~~~ r
+# an empty stack should just be a function that returns the expected values
+stack <- function() {
+    f <- function(query) 
+        switch(query, 
+               peak = NULL,
+               without_top = stop("Stack is already empty", call. = FALSE),
+               size = 0L)
+    structure(f, class = "stack")
+}
 
-    peak.stack <- function(s) s("peak")
-    without_top.stack <- function(s) s("without_top")
-    size.stack <- function(s) s("size")
+peak.stack <- function(s) s("peak")
+without_top.stack <- function(s) s("without_top")
+size.stack <- function(s) s("size")
+~~~~
 
 All that is left is to implement `push`.
 
@@ -89,15 +95,17 @@ consideration to make here is to ensure that `size(s)` gets evaluated.
 Otherwise, every call to get the `size` of a stack would result in
 recursively calling for the size of every stack below it. :
 
-    push.stack <- function(s, new_item) {
-        sz <- size(s) + 1L
-        f <- function(query) 
-            switch(query,
-                   peak = new_item,
-                   without_top = s,
-                   size = sz)
-        structure(f, class = "stack")
-    }
+~~~~ r
+push.stack <- function(s, new_item) {
+    sz <- size(s) + 1L
+    f <- function(query) 
+        switch(query,
+               peak = new_item,
+               without_top = s,
+               size = sz)
+    structure(f, class = "stack")
+}
+~~~~
 
 That's it! We have implemented a stack. There's nothing here that's
 super sophisticated, but the syntax feels a little magical. In [Oneil's
@@ -113,30 +121,40 @@ Test it out
 
 Let's try it out:
 
-    # an empty stack
-    s <- stack()
-    size(s)
+~~~~ r
+# an empty stack
+s <- stack()
+size(s)
+~~~~
 
     ## [1] 0
 
-    t <- push(s, 1)
-    u <- push(t, 2)
-    peak(t)
+~~~~ r
+t <- push(s, 1)
+u <- push(t, 2)
+peak(t)
+~~~~
 
     ## [1] 1
 
-    peak(u)
+~~~~ r
+peak(u)
+~~~~
 
     ## [1] 2
 
-    # shared data
-    identical(without_top(u), t)
+~~~~ r
+# shared data
+identical(without_top(u), t)
+~~~~
 
     ## [1] TRUE
 
-    # as opposed to:
-    t2 <- push(s, 1)
-    identical(t2, t)
+~~~~ r
+# as opposed to:
+t2 <- push(s, 1)
+identical(t2, t)
+~~~~
 
     ## [1] FALSE
 
@@ -146,13 +164,15 @@ Convenience methods
 Making an `as.list` method makes the structure `lapply`-able, among
 other things.
 
-    as.list.stack <- function(s) {
-        # pre-allocate
-        res <- vector("list", size(s))
-        
-        for (ind in seq_len(size(s))) {
-            res[[ind]] <- peak(s)
-            s <- without_top(s)
-        }
-        res
+~~~~ r
+as.list.stack <- function(s) {
+    # pre-allocate
+    res <- vector("list", size(s))
+    
+    for (ind in seq_len(size(s))) {
+        res[[ind]] <- peak(s)
+        s <- without_top(s)
     }
+    res
+}
+~~~~

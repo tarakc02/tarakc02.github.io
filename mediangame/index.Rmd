@@ -1,6 +1,7 @@
 ---
 output: 
     md_document:
+        variant: markdown_strict+fenced_code_blocks
         includes:
             in_header: hdr
 title: The Median Game
@@ -8,6 +9,10 @@ title: The Median Game
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+knitr::knit_hooks$set(source = function(x, options) {
+    x <- paste0("\n~~~~~r\n", paste0(x, collapse = "\n"), "\n~~~~~\n")
+    x
+})
 ```
 
 ```{r loadlibs, echo = FALSE}
