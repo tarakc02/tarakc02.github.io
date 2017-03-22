@@ -86,11 +86,11 @@ figcaption {
 
 .default ul {
   list-style-type: none;
+  margin-bottom: $base-font-size;
 }
 
-.default li {
-  margin-bottom: $base-font-size;
-  //line-height: 120%;
+.default li {    
+  margin-bottom: 2px;
   > ul,
   > ol {
     margin-bottom: 0;
