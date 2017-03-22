@@ -267,8 +267,8 @@ pre {
 
     nav ul li, footer ul li {
       display: list-item;      
-      line-height: 100%  
-      padding-bottom: 0;    
+      line-height: 100%;
+      padding-bottom: .25 * $base-font-size;    
       margin-bottom: 0;
     }
   }  
