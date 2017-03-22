@@ -36,13 +36,13 @@ $base-line-height: 140% !default;
 
 $spacing-unit:     30px !default;
 
-$text-color:       #35274a !default;
-$background-color: lighten(#eabe94, 25%) !default;
-$brand-color: #f2300f !default;
+$text-color:       #111 !default;
+$background-color: #fdfdfd !default;
+$brand-color: #0000ff !default;
 
-$grey-color:       #0b775e !default;
-$grey-color-light: lighten($grey-color, 60%) !default;
-$grey-color-dark:  darken($grey-color, 25%) !default;
+$grey-color:       #212121 !default;
+$grey-color-light: lighten($grey-color, 35%) !default;
+$grey-color-dark:  darken($grey-color, 15%) !default;
 
 // Width of the content area
 $content-width:    800px !default;

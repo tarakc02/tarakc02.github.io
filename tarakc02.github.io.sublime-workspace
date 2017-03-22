@@ -67,7 +67,7 @@
 			"file": "_config.yml",
 			"settings":
 			{
-				"buffer_size": 1449,
+				"buffer_size": 1595,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -76,7 +76,7 @@
 			"file": "index.md",
 			"settings":
 			{
-				"buffer_size": 391,
+				"buffer_size": 590,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -85,7 +85,7 @@
 			"file": "projects.md",
 			"settings":
 			{
-				"buffer_size": 308,
+				"buffer_size": 307,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -94,7 +94,7 @@
 			"file": "mathgames.md",
 			"settings":
 			{
-				"buffer_size": 584,
+				"buffer_size": 673,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -103,7 +103,7 @@
 			"file": "_layouts/default.html",
 			"settings":
 			{
-				"buffer_size": 661,
+				"buffer_size": 785,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -112,7 +112,7 @@
 			"file": "_data/projects.yml",
 			"settings":
 			{
-				"buffer_size": 1321,
+				"buffer_size": 1296,
 				"encoding": "UTF-8",
 				"line_ending": "Unix",
 				"name": "- name: ratelimitr"
@@ -122,7 +122,7 @@
 			"file": "_sass/base.scss",
 			"settings":
 			{
-				"buffer_size": 1019,
+				"buffer_size": 1613,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -131,7 +131,7 @@
 			"file": "_site/assets/css/main.css",
 			"settings":
 			{
-				"buffer_size": 2701,
+				"buffer_size": 7778,
 				"line_ending": "Unix"
 			}
 		},
@@ -139,7 +139,7 @@
 			"file": "assets/css/main.scss",
 			"settings":
 			{
-				"buffer_size": 3068,
+				"buffer_size": 7432,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -450,15 +450,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1449,
+						"buffer_size": 1595,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								968,
-								968
+								0,
+								0
 							]
 						],
 						"settings":
@@ -480,15 +480,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 391,
+						"buffer_size": 590,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								51,
-								51
+								0,
+								0
 							]
 						],
 						"settings":
@@ -508,15 +508,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 308,
+						"buffer_size": 307,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								56,
-								56
+								0,
+								0
 							]
 						],
 						"settings":
@@ -536,7 +536,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 584,
+						"buffer_size": 673,
 						"regions":
 						{
 						},
@@ -564,15 +564,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 661,
+						"buffer_size": 785,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								323,
-								323
+								0,
+								0
 							]
 						],
 						"settings":
@@ -594,15 +594,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1321,
+						"buffer_size": 1296,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1321,
-								1321
+								0,
+								0
 							]
 						],
 						"settings":
@@ -624,15 +624,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1019,
+						"buffer_size": 1613,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								141,
-								141
+								0,
+								0
 							]
 						],
 						"settings":
@@ -652,7 +652,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2701,
+						"buffer_size": 7778,
 						"regions":
 						{
 						},
@@ -682,15 +682,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3068,
+						"buffer_size": 7432,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								188,
-								188
+								0,
+								0
 							]
 						],
 						"settings":

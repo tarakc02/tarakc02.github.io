@@ -79,6 +79,7 @@ figcaption {
  * Lists
  */
 .default ul, ol {
+  margin-top: $base-font-size;
   margin-left: 0 * $spacing-unit;
   margin-right: $spacing-unit;
 }
@@ -88,8 +89,8 @@ figcaption {
 }
 
 .default li {
-  margin-bottom: .5 * $base-font-size;
-  line-height: 120%;
+  margin-bottom: $base-font-size;
+  //line-height: 120%;
   > ul,
   > ol {
     margin-bottom: 0;
@@ -135,7 +136,7 @@ a {
  */
 blockquote {
   color: $grey-color;
-  border-left: 4px solid $grey-color-light;
+  border-left: 2px solid $grey-color-light;
   padding-left: $spacing-unit / 2;
   font-size: 18px;
   letter-spacing: -1px;
@@ -154,8 +155,8 @@ blockquote {
 pre,
 code {  
   font-size: 13px;
-  border: 1px solid $grey-color;
-  background: lighten($grey-color-light, 15%);
+  border: 1px solid $grey-color-light;
+  background: none;
   border-radius: 3px;  
 }
 
@@ -175,7 +176,7 @@ pre {
   }
 }
 
-.highlight  { background: lighten($grey-color-light, 15%); }
+.highlight  { background: none; }
 .highlight .c { color: #999988; font-style: italic } /* Comment */
 .highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
 .highlight .k { font-weight: bold } /* Keyword */
@@ -270,7 +271,23 @@ pre {
   }  
 }
 
+.contact-info {
+  tr, td {
+    line-height: 115%;
+  }
 
+  .contact-type {
+    font-style: italic;    
+    //padding-left: $spacing-unit;
+    padding-right: .5em;
+    text-align: right;
+  }
+
+  .contact-name {
+    max-width: 10em;
+  }
+
+}
 
 /**
  * Clearfix
@@ -300,6 +317,15 @@ pre {
     list-style: none;
     font-weight: bold;
     margin-left: 0px;
+}
+
+footer {
+  margin-top: $spacing-unit;  
+}
+
+footer ul {
+  border-top: 1px solid $grey-color-light;  
+  padding-top: .5 * $spacing-unit;
 }
 
 .nav ul li, footer ul li {

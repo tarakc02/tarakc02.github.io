@@ -8,7 +8,11 @@ Hi I'm Tarak. I work as a data analyst in Prospect Development at UC Berkeley, b
 
 Where else I can be found:
 
-- github: [tarakc02](https://github.com/tarakc02/)
-- twitter: [tarakc02](https://twitter.com/tarakc02)
-- pinboard: [tarakc02](https://pinboard.in/u:tarakc02)
-- email: <span class = "typewriter">tarak_shah at berkeley.edu</span>
+<table class = "contact-info">
+{% for contact in site.data.contact-info %}
+<tr>
+	<td class = "contact-type">{{contact.key}}</td>
+	<td class = "contact-name"><a href = "{{contact.link}}">{{contact.name}}</a></td>
+</tr>	
+{% endfor %}
+</table>

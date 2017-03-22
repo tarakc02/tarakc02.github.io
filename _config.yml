@@ -30,9 +30,9 @@ author:
 sections:
   - name: home
     link: index
-  - name: r-pkgs
+  - name: r-packages
     link: projects
-  - name: writeups
+  - name: written
     link: mathgames
 
 sass:
