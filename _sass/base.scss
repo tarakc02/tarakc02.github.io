@@ -26,9 +26,17 @@
     font-style: italic;
 }
 
+@font-face {
+    font-family: 'fira';
+    src: 
+    	local('Fira Code'),
+		url('/assets/fonts/FiraCode-Regular.woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
 $base-font-family: 'Open Sans', sans-serif !default;
-$monospace-font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !default;
+$monospace-font-family: fira, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !default;
 $base-font-size:   16px !default;
 $base-font-weight: 400 !default;
 $small-font-size:  $base-font-size * 0.875 !default;
