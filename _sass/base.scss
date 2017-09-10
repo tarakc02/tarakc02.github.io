@@ -1,29 +1,18 @@
 @font-face {
-    font-family: 'Open Sans';
+    font-family: 'Droid Serif';
     src: 
-    	local('Open Sans'), 
-    	url('/assets/fonts/OpenSans-Regular-webfont.woff');
+    	local('Droid Serif'), 
+    	url('/assets/fonts/DroidSerif-Regular-webfont.woff');
     font-weight: normal;
-    font-style: normal;
-
-}
-
-@font-face {
-    font-family: 'Open Sans';
-    src: 
-    	local('Open Sans'), 
-    	url('/assets/fonts/OpenSans-Bold-webfont.woff');
-    font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Open Sans';
+    font-family: 'Open Sans Condensed Light';
     src: 
-    	local('Open Sans'),
-		url('/assets/fonts/OpenSans-Italic-webfont.woff');
-    font-weight: normal;
-    font-style: italic;
+    	local('Open Sans Condensed Light'), 
+    	url('/assets/fonts/OpenSans-CondLight-webfont.woff');
+    font-style: normal;
 }
 
 @font-face {
@@ -35,25 +24,30 @@
     font-style: normal;
 }
 
-$base-font-family: 'Open Sans', sans-serif !default;
+$base-font-family: 'Droid Serif', 'Open Sans', sans-serif !default;
+$heading-font-family: 'Open Sans Condensed Light';
 $monospace-font-family: fira, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !default;
-$base-font-size:   16px !default;
+$base-font-size:   18px !default;
 $base-font-weight: 400 !default;
+
+$h1-font-size: 48px !default;
+$h2-font-size: 48px !default;
+$h3-font-size: 32px !default;
 $small-font-size:  $base-font-size * 0.875 !default;
-$base-line-height: 140% !default;
+$base-line-height: 175% !default;
 
 $spacing-unit:     30px !default;
 
 $text-color:       #111 !default;
 $background-color: #fdfdfd !default;
-$brand-color: #0000ff !default;
+$brand-color: #0a8 !default;
 
 $grey-color:       #212121 !default;
 $grey-color-light: lighten($grey-color, 35%) !default;
 $grey-color-dark:  darken($grey-color, 15%) !default;
 
 // Width of the content area
-$content-width:    800px !default;
+$content-width:    700px !default;
 //$content-width: 60em !default;
 
 $on-palm:          600px !default;

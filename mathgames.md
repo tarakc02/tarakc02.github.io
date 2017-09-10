@@ -4,9 +4,7 @@ class: default
 title: TS - Writeups
 ---
 
-Little whatever things to pass the time.
-
-
+<h1>JUST WHATEVER</h1>
 - [Searching for Ramanujan's taxicab numbers](/taxicab): Trying to find numbers that can be expressed as the sum of two positive cubes in two different ways.
 - [Building a stack data structure with functions](/fun-stack): Understanding functions, closures, and environments by implementing a stack.
 - [Generating fake names that sound real(ish)](https://rpubs.com/tarakc02/name-project-1): Building models to generate first names that don't appear in the training data, but sound real. 

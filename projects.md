@@ -4,7 +4,7 @@ class: default
 title: TS - Projects
 ---
 
-Here's some things I've been working on recently:
+<h1>SOFTWARE THINGS</h1>
 
 <ul class = "project-list">
 {% for project in site.data.projects %}

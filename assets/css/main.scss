@@ -47,7 +47,7 @@ h1, h2, h3, h4, h5, h6,
 p, blockquote, pre,
 ul, ol, dl, figure,
 %vertical-rhythm {
-  margin-bottom: $spacing-unit / 2;
+  margin-bottom: $spacing-unit;
 }
 
 
@@ -89,8 +89,8 @@ figcaption {
 }
 
 .default li {
-  margin-bottom: $base-font-size;
-  //line-height: 120%;
+  margin-bottom: 1.5em;
+  line-height: 140%;
   > ul,
   > ol {
     margin-bottom: 0;
@@ -98,7 +98,7 @@ figcaption {
 }
 .writeup ul, ol {
   margin-left: $spacing-unit;
-  line-height: 120%;
+  line-height: 140%;
   > li {margin-bottom: .5 * $base-font-size;}
 }
 
@@ -108,16 +108,29 @@ figcaption {
  */
 h1, h2, h3, h4, h5, h6 {
   font-weight: $base-font-weight;
+  font-family: $heading-font-family;
+  color: $grey-color-light;
+  margin-top: 1em;
 }
 
+h1 {
+  font-size: $h1-font-size;
+}
 
+h2 {
+  font-size: $h2-font-size;
+}
+
+h3 {
+  font-size: $h3-font-size;
+}
 
 /**
  * Links
  */
 a {
   color: $brand-color;
-  text-decoration: none;  
+  text-decoration: none;
 
   &:visited {
     color: darken($brand-color, 15%);
@@ -135,7 +148,7 @@ a {
  * Blockquotes
  */
 blockquote {
-  color: $grey-color;
+  color: $grey-color-light;
   border-left: 2px solid $grey-color-light;
   padding-left: $spacing-unit / 2;
   font-size: 18px;
@@ -154,10 +167,11 @@ blockquote {
  */
 pre,
 code {  
-  font-size: 13px;
+  font-size: 14px;
   border: 1px solid $grey-color-light;
   background: #fafafa;
   border-radius: 3px;  
+  line-height: 140%;
 }
 
 code {
@@ -264,6 +278,8 @@ pre {
     max-width:         calc(#{$content-width} - 0);
     padding-right: 0;
     padding-left: 0;
+    
+    p {line-height: 140%;}
 
     nav ul li, footer ul li {
       display: list-item;      
