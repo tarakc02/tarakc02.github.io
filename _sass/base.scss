@@ -24,8 +24,8 @@
     font-style: normal;
 }
 
-$base-font-family: 'Droid Serif', 'Open Sans', sans-serif !default;
-$heading-font-family: 'Open Sans Condensed Light';
+$base-font-family: 'Droid Serif', serif !default;
+$heading-font-family: 'Open Sans Condensed Light', sans-serif, !default;
 $monospace-font-family: fira, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !default;
 $base-font-size:   18px !default;
 $base-font-weight: 400 !default;
@@ -42,8 +42,10 @@ $text-color:       #111 !default;
 $background-color: #fdfdfd !default;
 $brand-color: #0a8 !default;
 
-$grey-color:       #212121 !default;
-$grey-color-light: lighten($grey-color, 35%) !default;
+//$grey-color:       #212121 !default;
+$grey-color: #586e75 !default;
+//$grey-color-light: lighten($grey-color, 35%) !default;
+$grey-color-light: #93a1a1 !default;
 $grey-color-dark:  darken($grey-color, 15%) !default;
 
 // Width of the content area
