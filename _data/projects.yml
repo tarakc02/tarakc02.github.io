@@ -4,7 +4,7 @@
 
 - name: rmapzen
   github: tarakc02/rmapzen
-  description: An R package to work with the <a href="https://mapzen.com/documentation/">Mapzen API</a>. Thorough documentation (with examples) are avaialable at <a href="https://tarakc02.github.io/rmapzen">the github pages site</a>
+  description: An R package to work with the <a href="https://mapzen.com/documentation/">Mapzen API</a>. Thorough documentation (with examples) are avaialable at <a href="https://tarakc02.github.io/rmapzen">the github pages site</a>. rmapzen is also <a href="https://cran.r-project.org/package=rmapzen">on CRAN</a>.
 
 - name: discoveryengine
   github: tarakc02/discoveryengine
@@ -17,3 +17,7 @@
 - name: rbst
   github: tarakc02/rbst
   description: Purely functional balanced search trees implemented in R. 
+  
+- name: puzzlr
+  github: tarakc02/puzzlr
+  description: Tools for constructing, manipulating, and drawing tile-puzzles (helpful for learning about and experimenting with algorithms for solving tile puzzles -- for example, see <a href="/puzzle8">Solving the 8-puzzle with lazy evaluation</a>)
