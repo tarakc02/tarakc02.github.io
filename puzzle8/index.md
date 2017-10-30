@@ -305,5 +305,6 @@ as_tbl_graph(game_graph) %>%
                             guide = "none") +
     theme_void()
 ~~~~
-
-![](index_files/figure-markdown_strict+fenced_code_blocks/unnamed-chunk-19-1.png)
+<p class = "full-width">
+<img src = "index_files/figure-markdown_strict+fenced_code_blocks/unnamed-chunk-19-1.png">
+</p>
