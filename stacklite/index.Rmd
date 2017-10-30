@@ -1,0 +1,212 @@
+---
+output: 
+    md_document:
+        variant: markdown_strict+fenced_code_blocks
+        includes:
+            in_header: hdr
+title: The Median Game
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+knitr::knit_hooks$set(source = function(x, options) {
+    x <- paste0("\n~~~~~r\n", paste0(x, collapse = "\n"), "\n~~~~~\n")
+    x
+})
+```
+## SO question tags
+
+I'll be using the [StackLite dataset](http://varianceexplained.org/r/stack-lite/). Be sure to have [git lfs](https://git-lfs.github.com/) installed before cloning the repository. 
+
+### I. DATAFRAME AS MATRIX
+
+Consider the following data frame:
+
+```{r}
+library(tidyverse)
+
+dummy <- tribble(
+    ~row,   ~`1`,  ~`2`,  ~`3`,
+       "1",     1,     0,     7,
+       "2",     3,     6,     0,
+       "3",     0,     8,     0
+)
+
+dummy
+```
+
+It is the following matrix, represented as a `data.frame`:
+```{r}
+dummy_matrix <- matrix(c(
+    1, 0, 7,
+    3, 6, 0,
+    0, 8, 0
+), nrow = 3, byrow = TRUE)
+
+dummy_matrix
+```
+
+There are several zeroes in the matrix, so to save space, I might just store the locations and values of the nonzero cells (this doesn't make sense for such a small matrix, but is invaluable when working with very large, very sparse matrices):
+
+```{r}
+dummy_sparse <- dummy %>%
+    gather(column, value, -row) %>%
+    filter(value != 0)
+
+dummy_sparse
+```
+
+I can still perform basic matrix operations on `dummy_sparse`. For example, taking the transpose is as simple as renaming the rows to columns and vice versa:
+
+```{r}
+dummy_sparse %>% rename(row = column, column = row) %>%
+    
+    # to convert back to "dense" just spread the columns and fill in 0s
+    spread(column, value, fill = 0)
+```
+
+Furthermore, matrix multiplication can be expressed in terms of the `inner_join()` operation. For example, to square the `dummy` matrix, I can multiply `dummy_sparse` by itself:
+
+```{r}
+dummy_sparse %>%
+    inner_join(dummy_sparse, by = c("column" = "row")) %>%
+    
+    # take the row id from the first matrix, column id from the second
+    group_by(row, column = column.y) %>%
+    
+    # and calculate dot products
+    summarise(value = sum(value.x * value.y)) %>%
+    
+    # use spread to convert back to a dense representation
+    spread(column, value, fill = 0)
+```
+
+And that works just like normal matrix multiplication:
+
+```{r}
+dummy_matrix %*% dummy_matrix
+```
+
+> That's a cool party trick, but why should I care? 
+
+What kind of parties do you go to (and how can I get invited?). The point of the above exercise is that it illustrates a quick and accessible way to work with (ahem) big data. Since `dplyr` works with database backends, we can use the above code to multiply matrices that would be too big to work with in memory! In a relational database, a matrix would already be stored in the sparse (aka long) way. 
+
+### II. EXAMPLE: STACKLITE
+
+The `question_tags` data from StackLite includes the ID of each question and the (possibly many) tags that the questioner used to index the question.
+
+```{r, cache = TRUE}
+question_tags_df <- readr::read_csv("stacklite/question_tags.csv.gz")
+question_tags_df
+```
+
+I'll load the data into a SQLite database: 
+
+```{r}
+if (!file.exists("so-questions.sqlite")) {
+    question_db <- DBI::dbConnect(RSQLite::SQLite(), "so-questions.sqlite")
+    RSQLite::dbWriteTable(question_db, "question_tags", question_tags_df)
+}
+```
+
+Now I can continue working with it in `dplyr`:
+```{r}
+src <- src_sqlite("so-questions.sqlite")
+question_tags <- tbl(src, "question_tags")
+question_tags
+
+question_tag_counts <- question_tags %>% count(Tag)
+```
+
+```{r, cache = TRUE}
+## see the most popular tags:
+arrange(question_tag_counts, desc(n))
+```
+
+I can think of  `question_tags` as another sparse matrix, where the row is identified by the `Id`, and the column is identified by the `Tag`:
+
+```{r}
+question_tags %>% mutate(value = 1)
+```
+
+As before, there is an implicit 0 for every tag that was not used on a question. What we have is an adjacency matrix. Following the example of [this blogpost by Kieran Healy](https://kieranhealy.org/blog/archives/2013/06/09/using-metadata-to-find-paul-revere/), I can multiply the transpose of `question_tags` with `question_tags` to calculate the number of times every pair of tags co-occurred on a single question:
+
+```{r, cache = TRUE}
+tag_network_full <- question_tags %>% 
+    inner_join(question_tags, by = "Id") %>% 
+    group_by(taga = Tag.x, tagb = Tag.y) %>% 
+    
+    # since the "value" is 1, counting is the same as summing the values
+    summarise(weight = n_distinct(Id)) %>%
+    ungroup %>%
+    
+    # since the graph is undirected
+    filter(taga < tagb)
+
+# pull the pairs that co-occurred at least 25 times for further analysis
+tag_network <- tag_network_full %>% 
+    filter(weight >= 25) %>%
+    collect(n = Inf)
+
+# see the most common pairs of tags
+arrange(tag_network, desc(weight))
+```
+
+The `tag_network` may be familiar as an "edge list" representation of a network, where `weight` is the weight of each edge. What we've seen, then, is that:
+
+* dense matrix is to sparse matrix as
+* wide data is to long data as
+* adjacency matrix is to edge list
+
+The `tidygraph` package makes it really convenient to analyze the resulting graph:
+
+```{r}
+library(tidygraph)
+
+tag_graph <- as_tbl_graph(tag_network, directed = FALSE)
+```
+
+I start by filtering out the least common tags:
+
+```{r, cache = TRUE}
+tag_counts <- collect(question_tag_counts, n = Inf)
+tag_graph <- tag_graph %>%
+    inner_join(tag_counts, by = c(name = "Tag")) %>%
+    filter(n >= 1000)
+```
+
+I can use community finding alogrithms to group tags together. Here I calculate the communities, and then filter down the graph down to just those communities that have at least 10 tags:
+
+```{r}
+grouped_tags <- tag_graph %>%
+    mutate(group = group_fast_greedy(weights = weight),
+           group = paste("Group", LETTERS[group])) %>%
+    group_by(group) %>%
+    filter(n() > 10) %>%
+    ungroup
+```
+
+Plotting the 10 most common tags in each community group using the `ggraph` package:
+
+```{r, fig.width = 11, fig.height = 8, fig.align="center", class.output="full-width"}
+library(ggraph)
+grouped_tags %>%
+    group_by(group) %>%
+    top_n(10, wt = n) %>%
+    ggraph(layout = "kk") + 
+    geom_node_text(aes(label = name, size = n), 
+                   repel = TRUE, colour = "gray30") +
+    scale_size_continuous(range = c(3, 9), guide = "none") +
+    geom_edge_fan(alpha = .3, 
+                  width = .2, colour = "purple") +
+    theme_void() + 
+    theme(panel.background = element_rect(fill = "gray98",
+                                          colour = NA),
+          strip.background = element_rect(fill = "gray90",
+                                          colour = NA)) +
+    facet_nodes(~group, ncol = 3)
+```
+
+The groupings really did identify some structure in the tags. The only group that might require some explanation is Group D, which I suspect might have to do with all of those tags being common on data science questions. 
