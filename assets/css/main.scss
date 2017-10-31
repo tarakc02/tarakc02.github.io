@@ -58,6 +58,8 @@ ul, ol, dl, figure,
 img {
   max-width: 100%;
   vertical-align: middle;
+  display: block;
+  margin: auto;
 }
 
 
@@ -279,6 +281,10 @@ pre {
     max-width:         calc(#{$content-width} - (#{$spacing-unit}));
     padding-right: $spacing-unit / 2;
     padding-left: $spacing-unit / 2;
+    .full-width {
+        margin-left: -15%;
+        margin-right: -15%;
+    }
   }
 
   @include media-query($on-palm) {
@@ -289,6 +295,11 @@ pre {
     padding-left: 0;
     
     p {line-height: 140%;}
+    
+    .full-width {
+        margin-left: 0px;
+        margin-right: 0px;        
+    }
 
     nav ul li, footer ul li {
       display: list-item;      
@@ -366,6 +377,6 @@ footer ul {
 }
 
 .full-width {
-    margin-left: -160px;
-    margin-right: -160px;
+    margin-left: -18%;
+    margin-right: -18%;
 }
