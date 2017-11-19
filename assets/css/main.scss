@@ -111,8 +111,10 @@ figcaption {
 h1, h2, h3, h4, h5, h6 {
   font-weight: $base-font-weight;
   font-family: $heading-font-family;
+  text-transform: uppercase;
   color: $grey-color;
-  margin-top: 1em;
+  margin-top: 2em;
+  margin-bottom: .5em;
 }
 
 h1 {
@@ -150,12 +152,12 @@ a {
  * Blockquotes
  */
 blockquote {
+  font-family: $accent-font-family;
   color: $grey-color;
   border-left: 2px solid $grey-color-light;
   padding-left: $spacing-unit / 2;
-  font-size: 18px;
+  font-size: $accent-font-size;
   letter-spacing: -1px;
-  font-style: italic;
 
   > :last-child {
     margin-bottom: 0;
