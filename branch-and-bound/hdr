@@ -1,0 +1,11 @@
+---
+layout: default
+class: writeup
+title: TS - Using lazy lists to implement branch-and-bound
+---
+
+## Lazy lists and branch-and-bound
+
+<p class="abstract">
+This essay introduces the branch-and-bound search strategy in the context of the knapsack problem. The first two sections introduce the knapsack problem and implement branch-and-bound using lazily evaluated lists to find the optimal solution to a sample problem.  Next, "Analyzing the algorithm" introduces a couple of visualizations for evaluating the search process. The last two sections explore an alternative method for calcuting bounds, and visualize how the choice of bounding function affects the quality of the resulting solution. The section "Detour: an exact solution" presents a completely different approach to solving the knapsack, and in this essay is only valuable because it leads to the improved bounds-approximation method introduced in the following section.
+</p>
