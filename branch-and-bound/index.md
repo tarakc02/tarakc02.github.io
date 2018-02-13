@@ -467,34 +467,42 @@ solution[optimal]
     ## $lower_bound
     ## [1] 20430
 
+In order to actually see the items that were taken, I need to follow the
+solution down the tree to the leaf node, which is when there are no more
+items in the remaining sub-problem:
+
 ~~~~ r
-# view which items were taken
-taken_items(solution[optimal]$problem)
+solution_items <- solution %>% 
+    stream_filter(function(x) n_items(x$problem) == 0) %>%
+    purrr::pluck(1, "problem") %>% 
+    taken_items
+solution_items
 ~~~~
 
-    ## # A tibble: 20 x 3
+    ## # A tibble: 39 x 3
     ##       id weight value
     ##    <int>  <int> <dbl>
-    ##  1    16    602 645  
-    ##  2    32    658 706  
-    ##  3    17    869 935  
-    ##  4    48    924 996  
-    ##  5    45    652 704  
-    ##  6    30    493 538  
-    ##  7    38    505 553  
-    ##  8    11    513 566  
-    ##  9    44    466 522  
-    ## 10     4    449 509  
-    ## 11    33    195 222  
-    ## 12    35    330 387  
-    ## 13     7    220 277  
-    ## 14    28    277 355  
-    ## 15    36    184 260  
-    ## 16    50    184 266  
-    ## 17    49    195 284  
-    ## 18    41     75 117  
-    ## 19    14     26  59.0
-    ## 20    46     50 128
+    ##  1    13    373   325
+    ##  2    42    763   674
+    ##  3    25    651   576
+    ##  4    37    655   590
+    ##  5     8    822   741
+    ##  6    31    669   627
+    ##  7    27    612   582
+    ##  8    47    941   895
+    ##  9    40    884   847
+    ## 10    15    116   114
+    ## # ... with 29 more rows
+
+~~~~ r
+# check that we are within capacity and that items sum to optimal value
+dplyr::summarise(solution_items, w = sum(weight), v = sum(value))
+~~~~
+
+    ## # A tibble: 1 x 2
+    ##       w     v
+    ##   <int> <dbl>
+    ## 1 19726 20430
 
 Analyzing the algorithm
 -----------------------
@@ -548,7 +556,7 @@ solution_df %>%
     ggtitle("Progress towards optimal solution")
 ~~~~
 
-![](index_files/figure-markdown_strict+fenced_code_blocks/unnamed-chunk-12-1.png)
+![](index_files/figure-markdown_strict/unnamed-chunk-13-1.png)
 
 We don't have to run `solution` until a provably optimal solution -- we
 can stop earlier if we like. If we did so, we'd return the `best_seen`
@@ -569,7 +577,7 @@ solution_df %>%
             "expressed as percent of known upper bound")
 ~~~~
 
-![](index_files/figure-markdown_strict+fenced_code_blocks/unnamed-chunk-13-1.png)
+![](index_files/figure-markdown_strict/unnamed-chunk-14-1.png)
 
 Detour: an exact solution
 -------------------------
@@ -791,11 +799,11 @@ microbenchmark::microbenchmark(
 ~~~~
 
     ## Unit: milliseconds
-    ##                 expr min   lq       mean median   uq  max neval
-    ##  exact_solution(ks1)  30   30   27.81876     30   30   30    10
-    ##  exact_solution(ks2) 200  200  251.79328    200  300  300    10
-    ##  exact_solution(ks3) 500  500  497.42772    500  500  600    10
-    ##  exact_solution(ks4) 900 1000 1001.98542   1000 1000 1000    10
+    ##                 expr min   lq     mean median   uq  max neval
+    ##  exact_solution(ks1)  30   30  28.9307     30   30   40    10
+    ##  exact_solution(ks2) 200  200 242.3403    200  200  300    10
+    ##  exact_solution(ks3) 500  500 534.6781    500  500  800    10
+    ##  exact_solution(ks4) 900 1000 974.0433   1000 1000 1000    10
 
 So, `exact_solution` will not scale very well. However, we can use it to
 build a better approximation than `greedy`.
@@ -868,8 +876,8 @@ microbenchmark::microbenchmark(
 
     ## Unit: milliseconds
     ##                       expr min  lq       mean median  uq max neval
-    ##        exact_solution(ks2) 200 200 249.255484    200 300 300    10
-    ##  fptas(ks2, epsilon = 0.3)   5   5   6.406754      6   7   9    10
+    ##        exact_solution(ks2) 200 200 254.687448    200 300 300    10
+    ##  fptas(ks2, epsilon = 0.3)   4   4   4.538809      4   5   6    10
 
 Comparisons
 -----------
@@ -1036,7 +1044,7 @@ ggplot(solution_history,
           panel.grid.minor = element_blank())
 ~~~~
 <p class="full-width">
-<img src="index_files/figure-markdown_strict+fenced_code_blocks/unnamed-chunk-29-1.png" style="display: block; margin: auto;" />
+<img src="index_files/figure-markdown_strict/unnamed-chunk-30-1.png" style="display: block; margin: auto;" />
 </p>
 The `fptas` strategy really shines on the "strongly correlated" and
 "subset sum" knapsack instances: in the former case, though neither

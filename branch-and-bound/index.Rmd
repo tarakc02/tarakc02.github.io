@@ -200,8 +200,18 @@ optimal <- stream_which(solution,
 optimal <- optimal[1]
 optimal
 solution[optimal]
-# view which items were taken
-taken_items(solution[optimal]$problem)
+```
+
+In order to actually see the items that were taken, I need to follow the solution down the tree to the leaf node, which is when there are no more items in the remaining sub-problem:
+
+```{r}
+solution_items <- solution %>% 
+    stream_filter(function(x) n_items(x$problem) == 0) %>%
+    purrr::pluck(1, "problem") %>% 
+    taken_items
+solution_items
+# check that we are within capacity and that items sum to optimal value
+dplyr::summarise(solution_items, w = sum(weight), v = sum(value))
 ```
 
 ## Analyzing the algorithm
