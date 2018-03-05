@@ -275,7 +275,9 @@ ggplot() +
     ggrepel::geom_label_repel(data = town_labels,
                              aes(x = X, y = Y, label = NAME),
                              size = 3, family = "Roboto Condensed",
-                             label.padding = unit(.1, "lines"), alpha = .7)
+                             label.padding = unit(.1, "lines"), alpha = .7) +
+    ggtitle("Distribution of educational attainment in Alameda County",
+            "1 dot equals 100 people")
 ~~~~
 <p class = "full-width">
 <img src="index_files/figure-markdown_strict/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
