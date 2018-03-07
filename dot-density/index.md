@@ -13,9 +13,9 @@ is one way to map aggregated spatial data without some of the
 distortions inherent in choropleths. Several recent tools in R, in
 particular the `tidycensus` (for demographic data), `tigris` (for
 spatial shape files), and `sf` (for manipulating geospatial data)
-pacakges. What follows is a short tutorial on creating a dot-density
-map, using as an example the distribution of educational attainment in
-Alameda County, CA.
+packages, make it much easier to create these maps. What follows is a
+short tutorial on creating a dot-density map, using as an example the
+distribution of educational attainment in Alameda County, CA.
 
 Acquiring the data
 ------------------
@@ -130,14 +130,17 @@ acs <- acs %>%
     mutate(
         id = str_extract(variable, "[0-9]{3}$") %>% as.integer
     ) %>%
+    # variable 1 is the "total", which is just the sum of the others
+    filter(id > 1) %>%
     mutate(education =case_when(
         id %>% between(2, 16) ~ "No HS diploma",
         id %>% between(17, 21) ~ "HS, no Bachelors",
         id == 22 ~ "Bachelors",
         id > 22 ~ "Post-Bachelors"
-    )) %>% filter(!is.na(education)) %>%
+    )) %>% 
     group_by(GEOID, education) %>% 
     summarise(estimate = sum(estimate))
+
 acs
 ~~~~
 
@@ -163,35 +166,53 @@ acs
     ## 10 06001400300 HS, no Bachelors   1141   POLYGON ((-122.2642 37.84, ...
     ## # ... with 1,430 more rows
 
+Generating dots
+---------------
+
 Dot-density maps work by placing dots randomly within the appropriate
 geographic boundaries, to approximate the overall distribution of people
 in space. The function `sf::st_sample` samples points from within
 polygons. It seems like there are different ways of approaching the next
 step, what I did was split the data by education level, and then run the
-sampling function on each level for each block group. Grouping and
-summarizing at the end gets me to 4 multipoint layers, each containing a
-number of points. I also re-code the education level to an ordered
-factor variable, which will help when plotting:
+sampling function on each level for each block group, `rbind`ing them
+back together at the end.
+
+Note the `generate_samples` function includes a `suppressMessages`.
+That's because the `st_sample` function generated a number of messages
+notifying me that latitude and longitude are treated as planar
+coordinates. Given how small the areas I'm sampling from are, I'm ok
+with that simplification.
 
 ~~~~ r
 acs_split <- acs %>%
     filter(estimate > 50) %>%
     split(.$education)
 
-generate_samples <- function(data) suppressMessages(
-    data %>% st_sample(size = round(.$estimate / 100)))
+generate_samples <- function(data) 
+    suppressMessages(st_sample(data, size = round(data$estimate / 100)))
 
 points <- map(acs_split, generate_samples)
-points <- imap(points, ~st_sf(data_frame(education = rep(.y, length(.x))),
-                         geometry = .x))
+points <- imap(points, 
+               ~st_sf(data_frame(education = rep(.y, length(.x))),
+                      geometry = .x))
 points <- do.call(rbind, points)
+~~~~
+
+At this point, I've generated 11,200 individual points to be plotted.
+`sf` can group and summarize geometry -- in this case I group by
+education level and then summarize so instead of 11,200 individual
+points, I have just 4 layers of "multipoints." I'll also re-code
+education level to an ordered factor, to make plotting easier.
+
+~~~~ r
 points <- points %>% group_by(education) %>% summarise()
 points <- points %>%
     mutate(education = factor(
         education,
         levels = c("No HS diploma", "HS, no Bachelors",
                    "Bachelors", "Post-Bachelors")))
-points %>% mutate(n_points = map_int(geometry, length))
+# view how many points are in each layer
+points %>% mutate(n_points = map_int(geometry, nrow))
 ~~~~
 
     ## Simple feature collection with 4 features and 2 fields
@@ -203,10 +224,10 @@ points %>% mutate(n_points = map_int(geometry, length))
     ## # A tibble: 4 x 3
     ##   education        n_points                       geometry
     ##   <fct>               <int>         <sf_geometry [degree]>
-    ## 1 Bachelors            5748 MULTIPOINT (-122.326 37.891...
-    ## 2 HS, no Bachelors     9780 MULTIPOINT (-122.3314 37.79...
-    ## 3 No HS diploma        2812 MULTIPOINT (-122.3249 37.89...
-    ## 4 Post-Bachelors       4060 MULTIPOINT (-122.3238 37.89...
+    ## 1 Bachelors            2874 MULTIPOINT (-122.326 37.891...
+    ## 2 HS, no Bachelors     4890 MULTIPOINT (-122.3314 37.79...
+    ## 3 No HS diploma        1406 MULTIPOINT (-122.3249 37.89...
+    ## 4 Post-Bachelors       2030 MULTIPOINT (-122.3238 37.89...
 
 Plotting
 --------
@@ -214,11 +235,11 @@ Plotting
 ~~~~ r
 # setting theme options
 theme_set(theme_minimal() +
-              theme(panel.grid.major = element_line(size = .1),
+              theme(panel.grid.major = element_line(size = 0),
+                    plot.background = element_rect(fill = "#fdfdfd",
+                                                   colour = NA),
                     axis.title = element_blank(),
                     text = element_text(family = "Roboto Condensed"),
-                    panel.grid.major.x = element_line(size = 0),
-                    panel.grid.major.y = element_line(size = 0),
                     axis.text = element_blank(),
                     legend.position = "bottom"))
 ~~~~
@@ -232,9 +253,9 @@ ggplot() +
     scale_color_brewer(type = "div", palette = 4) + 
     scale_fill_brewer(type = "div", palette = 4)
 ~~~~
-
-![](index_files/figure-markdown_strict/unnamed-chunk-7-1.png)
-
+<p class = "full-width">
+<img src="index_files/figure-markdown_strict/dot-density-try1-1.png" style="display: block; margin: auto;" />
+</p>
 That's a pretty good start. The `tigris` package makes it easy to get
 various geography layers from TIGER, I'll add water, major roads, and
 label the towns in the county. I'll also pull down the outline of
@@ -272,13 +293,14 @@ ggplot() +
             size = .2, colour = "gray40") +
     scale_color_brewer(type = "div", palette = 4) +
     scale_fill_brewer(type = "div", palette = 4) +
-    ggrepel::geom_label_repel(data = town_labels,
-                             aes(x = X, y = Y, label = NAME),
-                             size = 3, family = "Roboto Condensed",
-                             label.padding = unit(.1, "lines"), alpha = .7) +
+    ggrepel::geom_label_repel(
+        data = town_labels,
+        aes(x = X, y = Y, label = NAME),
+        size = 3, family = "Roboto Condensed",
+        label.padding = unit(.1, "lines"), alpha = .7) +
     ggtitle("Distribution of educational attainment in Alameda County",
             "1 dot equals 100 people")
 ~~~~
 <p class = "full-width">
-<img src="index_files/figure-markdown_strict/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+<img src="index_files/figure-markdown_strict/dot-density-final-1.png" style="display: block; margin: auto;" />
 </p>
