@@ -6,6 +6,7 @@ title: TS - Writeups
 
 <h1>JUST WHATEVER</h1>
 - [Branch and bound using lazily evaluated lists](/branch-and-bound): Implementing a branch-and-bound solver for the knapsack problem using lazily evaluated lists, and comparing performance of different approximation algorithms. 
+- [Population inferences from incomplete and biased data](/mse): Using multiple systems estimation techniques to make defensible inferences about a population when our data is incomplete and/or biased.
 - [Searching for Ramanujan's taxicab numbers](/taxicab): Trying to find numbers that can be expressed as the sum of two positive cubes in two different ways.
 - [Solving the 8-puzzle with lazy evaluation](/puzzle8): Solving a popular tile-based game using lazily evaluated lists.
 - [Building a stack data structure with functions](/fun-stack): Understanding functions, closures, and environments by implementing a stack.
