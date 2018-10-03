@@ -1,0 +1,11 @@
+---
+layout: default
+class: writeup
+title: TS - Making defensible inferences from incomplete and biased data
+---
+
+# Multiple systems estimation
+
+## Introduction
+
+It's often necessary to make population inferences when all we have are multiple, incomplete datasets regarding the population. For instance, we could [use a cellphone app to collect reports of bird-sightings from citizen scientists](https://www.thetalkingmachines.com/episodes/overfitting-and-asking-ecological-questions-ml), but then we need to get from bird sightings by cell-phone owners to actual bird populations. Or, we might have [reports of human rights violations](https://amstat.tandfonline.com/doi/abs/10.1080/00031305.2013.821093) from multiple sources. In such cases, we know that not all of the population of interest is represented in the data, and furthermore that the data we do have may be systematically biased (reported bird sightings will track where humans with cell phones are when they see a bird, but that may not represent where most birds are; certain types of victims or abuses may be better- or less-well documented than others).
