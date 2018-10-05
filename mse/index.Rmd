@@ -190,7 +190,7 @@ complex_event_reports %>%
     summarise(n = n_distinct(event_id)) %>% 
     ggplot(aes(x = event_class, y = n)) +
     geom_col(width = .8) + 
-    facet_wrap(~source, scales = "free_y") +
+    facet_wrap(~source) +
     labs(title    = "'Raw' data leads to incorrect conclusions",
          subtitle = "reported events vs. actual events by category") +
     theme(axis.title.y = element_blank())
