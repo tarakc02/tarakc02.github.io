@@ -196,22 +196,6 @@ complex_event_reports %>%
     theme(axis.title.y = element_blank())
 ```
 
-Though there isn't any causal relationship between sources, I now can observe correlation between sources 5 and 6, reflecting the fact that they have similar biases (using cosine similarity):
-
-```{r}
-rpt_mat <- complex_event_reports %>% 
-    mutate(placeholder = 1L) %>% 
-    spread(source, placeholder, fill = 0L) %>% 
-    select(source1:source6) %>% as.matrix
-
-dot_products <- t(rpt_mat) %*% rpt_mat
-sim_scale <- sqrt(diag(dot_products))
-sim <- dot_products / sim_scale
-sim <- apply(sim, 1, function(x) x / sim_scale)
-
-round(sim, 2)
-```
-
 We'll set up the data for the model as before:
 
 ```{r}
@@ -219,7 +203,7 @@ complex_event_report_smry <- summarize_reports(complex_event_reports)
 complex_event_report_smry
 ```
 
-I can imagine the same sort of model as we used in the simpler case above. If a particular class of event appears in more intersections than another, I can infer that it is over-represented in the data. I'll need to model the observed correlation between the reporting sources. Fortunately, the `brms` formula syntax allows me to do this:
+I can imagine the same sort of model as we used in the simpler case above. If a particular class of event appears in more intersections than another, I can infer that it is over-represented in the data. 
 
 ```{r complex-event-model, cache = TRUE}
 complex_event_data_model <- 
