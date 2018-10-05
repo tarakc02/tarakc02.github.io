@@ -85,8 +85,8 @@ generate_events(classes = c("a", "b"),
     ## # A tibble: 2 x 2
     ##   event_class     n
     ##   <chr>       <int>
-    ## 1 a            3778
-    ## 2 b            1222
+    ## 1 a            3680
+    ## 2 b            1320
 
 A reporting source is simulated by sampling from the population of
 events, possibly with bias. To generate multiple reports of events, we
@@ -303,39 +303,13 @@ complex_event_reports %>%
     summarise(n = n_distinct(event_id)) %>% 
     ggplot(aes(x = event_class, y = n)) +
     geom_col(width = .8) + 
-    facet_wrap(~source, scales = "free_y") +
+    facet_wrap(~source) +
     labs(title    = "'Raw' data leads to incorrect conclusions",
          subtitle = "reported events vs. actual events by category") +
     theme(axis.title.y = element_blank())
 ~~~~
 
 ![](index_files/figure-markdown_strict/unnamed-chunk-8-1.png)
-
-Though there isn't any causal relationship between sources, I now can
-observe correlation between sources 5 and 6, reflecting the fact that
-they have similar biases (using cosine similarity):
-
-~~~~ r
-rpt_mat <- complex_event_reports %>% 
-    mutate(placeholder = 1L) %>% 
-    spread(source, placeholder, fill = 0L) %>% 
-    select(source1:source6) %>% as.matrix
-
-dot_products <- t(rpt_mat) %*% rpt_mat
-sim_scale <- sqrt(diag(dot_products))
-sim <- dot_products / sim_scale
-sim <- apply(sim, 1, function(x) x / sim_scale)
-
-round(sim, 2)
-~~~~
-
-    ##         source1 source2 source3 source4 source5 source6
-    ## source1    1.00    0.10    0.11    0.10    0.14    0.14
-    ## source2    0.10    1.00    0.10    0.09    0.14    0.14
-    ## source3    0.11    0.10    1.00    0.10    0.14    0.14
-    ## source4    0.10    0.09    0.10    1.00    0.14    0.13
-    ## source5    0.14    0.14    0.14    0.14    1.00    0.36
-    ## source6    0.14    0.14    0.14    0.13    0.36    1.00
 
 We'll set up the data for the model as before:
 
@@ -361,9 +335,7 @@ complex_event_report_smry
 
 I can imagine the same sort of model as we used in the simpler case
 above. If a particular class of event appears in more intersections than
-another, I can infer that it is over-represented in the data. I'll need
-to model the observed correlation between the reporting sources.
-Fortunately, the `brms` formula syntax allows me to do this:
+another, I can infer that it is over-represented in the data.
 
 ~~~~ r
 complex_event_data_model <- 
