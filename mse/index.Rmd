@@ -40,17 +40,7 @@ generate_events <- function(
     classes = "a", 
     class_weights = NULL) {
     
-    if (is.null(class_weights)) 
-        class_weights <- set_names(rep(1, length(classes)), classes)
-    
-    not_specified <- setdiff(classes, names(class_weights))
-    if (length(not_specified) > 0) {
-        extra_wts <- set_names(rep(1, length(not_specified)), 
-                               not_specified)
-        class_weights <- c(class_weights, extra_wts)
-    }
-    
-    class_weights <- class_weights / sum(class_weights)
+    class_weights <- standardize_weights(classes, class_weights)
     
     data_frame(
         event_id    = seq_len(n),
@@ -60,11 +50,30 @@ generate_events <- function(
                              prob = class_weights)
     )
 }
+
+## helper function
+standardize_weights <- function(classes, class_weights) {
+    n_classes <- length(classes)
+    
+    if (is.null(class_weights)) 
+        class_weights <- set_names(rep(1, n_classes), classes)
+    
+    not_specified <- setdiff(classes, names(class_weights))
+    n_not_specified <- length(not_specified)
+    
+    if (n_not_specified > 0) {
+        extra_wts <- set_names(rep(1, n_not_specified), 
+                               not_specified)
+        class_weights <- c(class_weights, extra_wts)
+    }
+    
+    class_weights / sum(class_weights)
+}
 ```
 
 For example, we can simulate two classes of events where one class is 3 times as prevalent as the other:
 
-```{r demo generate-events}
+```{r demo-generate-events}
 generate_events(classes = c("a", "b"), 
                 class_weights = c(a = 3)) %>%
     group_by(event_class) %>% 
@@ -79,17 +88,8 @@ sample_events <- function(events, frac = .1,
     
     classes <- unique(events$event_class)
     n_classes <- length(classes)
-    
-    if (is.null(weights)) weights <- set_names(rep(1, n_classes), classes)
-    
-    not_specified <- setdiff(classes, names(weights))
-    if (length(not_specified) > 0) {
-        extra_wts <- set_names(rep(1, length(not_specified)), not_specified)
-        weights <- c(weights, extra_wts)
-    }
-    
-    prob_scaler <- n_classes / sum(weights)
-    prob <- weights * prob_scaler
+    weights <- standardize_weights(classes, weights)
+    prob <- weights * n_classes
     
     ev <- split(events, events$event_class)
     map2_df(.x = prob, .y = names(prob),
