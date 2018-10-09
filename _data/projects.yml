@@ -7,8 +7,8 @@
   description: An R package to work with the <a href="https://mapzen.com/documentation/">Mapzen API</a>. Thorough documentation (with examples) are available at <a href="https://tarakc02.github.io/rmapzen">the github pages site</a>. rmapzen is also <a href="https://cran.r-project.org/package=rmapzen">on CRAN</a>.
 
 - name: discoveryengine
-  github: tarakc02/discoveryengine
-  description: At my work, we created a tool to define populations of database entities using a simple predicate-based language. Documentation and examples at <a href="https://tarakc02.github.io/discodocs/">Disco Docs</a>
+  github: cwolfsonseeley/discoveryengine
+  description: At my work, we created a tool to define populations of database entities using a simple predicate-based language. Documentation and examples at <a href="https://cwolfsonseeley.github.io/discodocs/">Disco Docs</a> (I've since left the University, and the project is being continued by my former team)
 
 - name: lazylist
   github: tarakc02/lazylist
