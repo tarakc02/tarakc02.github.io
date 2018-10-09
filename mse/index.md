@@ -13,6 +13,8 @@ It's often necessary to make population inferences when all we have are multiple
 -   [Simulating data](#simulating-data)
 -   [A simple example: random samples](#a-simple-example-random-samples)
 -   [Biased sources](#biased-sources)
+-   [System dependence](#system-dependence)
+-   [Resources](#resources)
 
 Simulating data
 ---------------
@@ -50,17 +52,7 @@ generate_events <- function(
     classes = "a", 
     class_weights = NULL) {
     
-    if (is.null(class_weights)) 
-        class_weights <- set_names(rep(1, length(classes)), classes)
-    
-    not_specified <- setdiff(classes, names(class_weights))
-    if (length(not_specified) > 0) {
-        extra_wts <- set_names(rep(1, length(not_specified)), 
-                               not_specified)
-        class_weights <- c(class_weights, extra_wts)
-    }
-    
-    class_weights <- class_weights / sum(class_weights)
+    class_weights <- standardize_weights(classes, class_weights)
     
     data_frame(
         event_id    = seq_len(n),
@@ -69,6 +61,25 @@ generate_events <- function(
                              replace = TRUE, 
                              prob = class_weights)
     )
+}
+
+## helper function
+standardize_weights <- function(classes, class_weights) {
+    n_classes <- length(classes)
+    
+    if (is.null(class_weights)) 
+        class_weights <- set_names(rep(1, n_classes), classes)
+    
+    not_specified <- setdiff(classes, names(class_weights))
+    n_not_specified <- length(not_specified)
+    
+    if (n_not_specified > 0) {
+        extra_wts <- set_names(rep(1, n_not_specified), 
+                               not_specified)
+        class_weights <- c(class_weights, extra_wts)
+    }
+    
+    class_weights / sum(class_weights)
 }
 ~~~~
 
@@ -85,8 +96,8 @@ generate_events(classes = c("a", "b"),
     ## # A tibble: 2 x 2
     ##   event_class     n
     ##   <chr>       <int>
-    ## 1 a            3680
-    ## 2 b            1320
+    ## 1 a            3799
+    ## 2 b            1201
 
 A reporting source is simulated by sampling from the population of
 events, possibly with bias. To generate multiple reports of events, we
@@ -98,17 +109,8 @@ sample_events <- function(events, frac = .1,
     
     classes <- unique(events$event_class)
     n_classes <- length(classes)
-    
-    if (is.null(weights)) weights <- set_names(rep(1, n_classes), classes)
-    
-    not_specified <- setdiff(classes, names(weights))
-    if (length(not_specified) > 0) {
-        extra_wts <- set_names(rep(1, length(not_specified)), not_specified)
-        weights <- c(weights, extra_wts)
-    }
-    
-    prob_scaler <- n_classes / sum(weights)
-    prob <- weights * prob_scaler
+    weights <- standardize_weights(classes, weights)
+    prob <- weights * n_classes
     
     ev <- split(events, events$event_class)
     map2_df(.x = prob, .y = names(prob),
@@ -417,4 +419,42 @@ ce_estimates %>%
 
 <p class = "full-width">
 <img src="index_files/figure-markdown_strict/plot-ce-estimates-1.png" style="display: block; margin: auto;" />
-</p>
+</p> 
+
+System dependence
+-----------------
+
+This post did not explore the phenomenon of "system dependence" -- when
+an event's appearance on one list makes it more or less likely to appear
+on another list. For instance, according to [this overview by Lum,
+Price, and
+Banks](http://www.tandfonline.com/doi/full/10.1080/00031305.2013.821093#.UoqB2Y2oW14),
+in the context of documenting human rights abuses,
+
+> This was a major problem in the Colombia case study highlighted in
+> Section 3.3, where Benetech analyzed lists collected by both
+> government agencies and nongovernmental organizations (NGOs). Negative
+> dependence occurred because people who were inclined to report a
+> violation to an NGO were less likely to trust the government (and vice
+> versa). Positive dependence occurred because records of homicides kept
+> by the National Police were partially subsumed in the list of
+> violations collected by the Office of the Vice Presidency, and both
+> lists were among those used in the analysis.
+
+The approaches presented in that paper involve adding interaction terms
+to the model -- in fact, looking at every possible model based on
+presence or absence of each interaction and then either picking the best
+model or averaging over them. I wondered if I could cheat by modeling
+the correlation among the linear model coefficients directly, but I
+didn't have much luck.
+
+Resources
+---------
+
+Much of what was presented here is based on my understanding of the
+thorough 5-part FAQ over at the [HRDAG
+website](https://hrdag.org/2013/03/11/mse-the-basics/), Patrick Ball's
+[blog post](https://hrdag.org/tech-notes/basic-mse.html) about the
+topic, and the paper by [Lum, Price, and
+Banks](http://www.tandfonline.com/doi/full/10.1080/00031305.2013.821093#.UoqB2Y2oW14)
+(paywalled).
