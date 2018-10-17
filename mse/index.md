@@ -444,9 +444,7 @@ in the context of documenting human rights abuses,
 The approaches presented in that paper involve adding interaction terms
 to the model -- in fact, looking at every possible model based on
 presence or absence of each interaction and then either picking the best
-model or averaging over them. I wondered if I could cheat by modeling
-the correlation among the linear model coefficients directly, but I
-didn't have much luck.
+model or averaging over them.
 
 Resources
 ---------
