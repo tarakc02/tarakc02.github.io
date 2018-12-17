@@ -160,20 +160,17 @@ priors <- c(prior(normal(0, 5), nlpar = "main"),
 big_model <- brm(interaction_fx_form,
                  data  = report_smry,
                  prior = priors,
-                 iter  = 5000, chains = 4, cores = 4)
+                 iter  = 5000, chains = 4, cores = 4,
+                 control = list(adapt_delta = .95,
+                                max_treedepth = 15))
 ~~~~
 
     ## Compiling the C++ model
 
-    ## recompiling to avoid crashing R session
-
     ## Start sampling
 
-    ## Warning: There were 97 divergent transitions after warmup. Increasing adapt_delta above 0.8 may help. See
+    ## Warning: There were 17 divergent transitions after warmup. Increasing adapt_delta above 0.95 may help. See
     ## http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
-
-    ## Warning: There were 7385 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
-    ## http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded
 
     ## Warning: Examine the pairs() plot to diagnose sampling problems
 
@@ -201,7 +198,7 @@ get_variables(big_model) %>%
     ## [13] "r_event_class__main[e,Intercept]"
 
 This time around, the model does a better job of estimating the true
-counts:
+counts, although I still underestimate class `d`:
 
 ~~~~ r
 big_model_estimates <- big_model %>%

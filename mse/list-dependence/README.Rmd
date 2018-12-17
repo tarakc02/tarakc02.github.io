@@ -214,7 +214,9 @@ priors <- c(prior(normal(0, 5), nlpar = "main"),
 big_model <- brm(interaction_fx_form,
                  data  = report_smry,
                  prior = priors,
-                 iter  = 5000, chains = 4, cores = 4)
+                 iter  = 5000, chains = 4, cores = 4,
+                 control = list(adapt_delta = .95,
+                                max_treedepth = 15))
 ```
 
 I need to draw from the intercept parameters to estimate the number of unreported events. The `get_variables` function helps to look for the names of the appropriate model parameters.
@@ -223,7 +225,7 @@ I need to draw from the intercept parameters to estimate the number of unreporte
 get_variables(big_model) %>%
     keep(~str_detect(., "[iI]ntercept"))
 ```
-This time around, the model does a better job of estimating the true counts:
+This time around, the model does a better job of estimating the true counts, although I still underestimate class `d`:
 
 ```{r plot-big-model, fig.width = 11, fig.height = 7, fig.align="center", class.output="full-width", dpi = 200}
 big_model_estimates <- big_model %>%
