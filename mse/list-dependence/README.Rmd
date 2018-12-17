@@ -247,7 +247,7 @@ get_variables(big_model) %>%
 
 Here I'll use a regular expression to draw samples of just the 2- and 3-way interaction effects. By plotting the first 100 draws, I see that the model correctly picked up on the underlying dependence structure.
 
-```{r plot-interactions, fig.height = 8, fig.width = 6, dpi = 200, fig.align = "center", class.output = "full-width"}
+```{r plot-interactions, fig.height = 7.5, fig.width = 6.5, dpi = 200, fig.align = "center", class.output = "full-width"}
 interaction_draws <- gather_draws(
     big_model,
     `b_interaction_([^\\:]+\\:){1,2}[^\\:]+$`,
