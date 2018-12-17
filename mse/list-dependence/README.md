@@ -5,16 +5,8 @@ post](https://tarakc02.github.io/mse/):
 ls()
 ~~~~
 
-    ##  [1] "actual_by_class"       "big_model"            
-    ##  [3] "big_model_estimates"   "dependent_reports"    
-    ##  [5] "events"                "generate_events"      
-    ##  [7] "generate_reports"      "interaction_draws"    
-    ##  [9] "interaction_fx_form"   "plot_estimates"       
-    ## [11] "priors"                "report_smry"          
-    ## [13] "reported_by_class"     "reports"              
-    ## [15] "sample_events"         "small_model"          
-    ## [17] "small_model_estimates" "standardize_weights"  
-    ## [19] "summarize_reports"
+    ## [1] "generate_events"     "generate_reports"    "sample_events"      
+    ## [4] "standardize_weights" "summarize_reports"
 
 Next, I simulate list dependence by creating pairs of reports, the first
 element is generated as usual, the second is sampled from the original
