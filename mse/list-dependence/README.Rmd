@@ -1,0 +1,277 @@
+---
+output: 
+    md_document:
+        variant: markdown_strict+fenced_code_blocks
+        toc: yes
+title: MSE addition - list dependence
+---
+
+```{r setup, warning = FALSE, message = FALSE, echo = FALSE}
+library(tidyverse)
+library(brms)
+library(tidybayes)
+
+theme_set(
+    hrbrthemes::theme_ipsum_rc(grid = FALSE) +
+        theme(plot.background = element_rect(
+            fill = "#fdfdfd", colour = NA
+        )))
+```
+
+```{r sim-functions, echo = FALSE}
+generate_events <- function(
+    n = 5000, 
+    classes = "a", 
+    class_weights = NULL) {
+    
+    class_weights <- standardize_weights(classes, class_weights)
+    
+    data_frame(
+        event_id    = seq_len(n),
+        event_class = sample(names(class_weights), 
+                             size = n, 
+                             replace = TRUE, 
+                             prob = class_weights)
+    )
+}
+
+## helper function
+standardize_weights <- function(classes, class_weights) {
+    n_classes <- length(classes)
+    
+    if (is.null(class_weights)) 
+        class_weights <- set_names(rep(1, n_classes), classes)
+    
+    not_specified <- setdiff(classes, names(class_weights))
+    n_not_specified <- length(not_specified)
+    
+    if (n_not_specified > 0) {
+        extra_wts <- set_names(rep(1, n_not_specified), 
+                               not_specified)
+        class_weights <- c(class_weights, extra_wts)
+    }
+    
+    class_weights / sum(class_weights)
+}
+
+sample_events <- function(events, frac = .1,
+                          weights = NULL) {
+    
+    classes <- unique(events$event_class)
+    n_classes <- length(classes)
+    weights <- standardize_weights(classes, weights)
+    prob <- weights * n_classes
+    
+    ev <- split(events, events$event_class)
+    map2_df(.x = prob, .y = names(prob),
+            ~sample_frac(ev[[.y]], size = .x * frac))
+}
+
+generate_reports <- function(events, n_reports = 1, ..., from = 1) {
+    res <- rerun(n_reports, sample_events(events, ...))
+    imap_dfr(res, ~mutate(.x, source = paste0("source", from + .y - 1)))
+}
+
+summarize_reports <- function(event_reports) {
+    event_reports %>% 
+        mutate(placeholder = 1L) %>% 
+        spread(source, placeholder, fill = 0L) %>% 
+        group_by_at(vars(-event_id)) %>% 
+        summarise(n = n_distinct(event_id)) %>% 
+        ungroup
+}
+```
+
+I'll start with the data-simulation functions from [the original post](https://tarakc02.github.io/mse/):
+
+```{r show-orig}
+ls()
+```
+
+Next, I simulate list dependence by creating pairs of reports, the first element is generated as usual, the second is sampled from the original events data using different probabilities depending on whether the event was documented in the first report.
+
+```{r dep-rpt-fn}
+dependent_reports <- function(events,
+                              frac, ...,
+                              dup_prob, else_prob,
+                              from = 1) {
+    s <- sample_events(events, frac, ...)
+    t <- events %>%
+        left_join(s, by = "event_id") %>%
+        transmute(event_id,
+                  event_class = event_class.x,
+                  in_s = !is.na(event_class.y),
+                  sample_prob = ifelse(in_s, dup_prob, else_prob)) %>%
+        sample_frac(frac, weight = sample_prob) %>%
+        select(event_id, event_class)
+    imap_dfr(list(s, t), ~mutate(.x, source = paste0("source", from + .y - 1)))
+}
+```
+
+In this example, I generate 15000 original events, along with 6 reporting sources, 2 of them exhibit positive dependence in addition to `event_class`-based selection bias, two exhibit negative dependence, and the last two exhibit selection bias but not list dependence.
+
+```{r simulate-data}
+set.seed(3970673)
+events <- generate_events(n = 15000, classes = letters[1:5])
+
+reports <- bind_rows(
+    dependent_reports(
+        events,
+        frac = .15, weights = c(a = 5, d = .5),
+        dup_prob = .05, else_prob = .2
+    ), 
+    dependent_reports(
+        events,
+        frac = .2, 
+        dup_prob = .8, else_prob = .1,
+        from = 3
+    ),
+    generate_reports(events, n_reports = 2, from = 5,
+                     weights = c(b = 10))
+)
+```
+
+Now I'll create the documentation pattern summary, and attempt to fit the model from before, that does not include interaction effects:
+
+```{r rpt-smry}
+report_smry <- summarize_reports(reports)
+```
+
+```{r try-old-model, cache = TRUE}
+small_model <- 
+    brm(n ~ (1 + source1 + source2 + source3 + 
+                 source4 + source5 + source6) | p | event_class,
+        data = report_smry, family = poisson(), 
+        control = list(adapt_delta = .95, max_treedepth = 15), 
+        iter = 5000, chains = 4, cores = 4)
+```
+
+I'll borrow from the original post's code to make a custom plotting function -- this takes a model along with actual and reported event counts and plots estimates drawn from the model posterior against actual event counts.
+
+```{r comp-plot-fn}
+plot_estimates <- function(actual, reported, estimates, 
+                           title = "Estimated events by type") {
+    estimates <- estimates %>% 
+        inner_join(reported, by = "class") %>% 
+        mutate(estimated = n_reported + unreported_est)
+
+    ggplot(estimates,
+           aes(x = estimated)) + 
+        geom_histogram(binwidth = 7) + 
+        geom_vline(data = actual,
+                   aes(xintercept = n), 
+                   colour = "red",
+                   size = 1) +
+        facet_wrap(~class, scales = "free_y") + 
+        theme(axis.title.x = element_blank(),
+              axis.title.y = element_blank()) +
+        labs(title    = title,
+             subtitle = "true # of events in red")
+}
+```
+
+The `small_model`, without any interaction effects, does not do a good job of estimating the true numbers of events:
+
+```{r plot-small-model, fig.width = 11, fig.height = 7, fig.align="center", class.output="full-width", dpi = 200}
+
+reported_by_class <- reports %>% 
+    group_by(class = event_class) %>% 
+    summarise(n_reported = n_distinct(event_id))
+
+actual_by_class <- events %>% 
+    group_by(class = event_class) %>% 
+    summarise(n = n_distinct(event_id))
+
+small_model_estimates <- small_model %>% 
+    spread_draws(r_event_class[class, param], b_Intercept) %>% 
+    filter(param == "Intercept") %>% 
+    mutate(unreported_est = exp(r_event_class + b_Intercept)) %>% 
+    ungroup
+
+plot_estimates(actual    = actual_by_class,
+               reported  = reported_by_class,
+               estimates = small_model_estimates,
+               title     = "Event estimates (no interaction effects)")
+```
+
+So I expand on the smaller model, by including interaction effects. Here I model every possible interaction, and use the [horseshoe](https://arxiv.org/abs/1610.05559) as a prior on the interaction effects. 
+
+```{r big-model, cache = TRUE}
+interaction_fx_form <-
+    bf(n ~ main + interaction,
+       # main fx formula is the same as before
+       main        ~ (1 + source1 + source2 + source3 +
+                          source4 + source5 + source6) | event_class,
+       # only estimate population-level interaction effects, not group-level
+       interaction ~ 0 + (source1 + source2 + source3 +
+                          source4 + source5 + source6) ^ 6 - .,
+       family = poisson(),
+       nl = TRUE)
+
+priors <- c(prior(normal(0, 5), nlpar = "main"),
+            prior(horseshoe(), nlpar  = "interaction"))
+
+big_model <- brm(interaction_fx_form,
+                 data  = report_smry,
+                 prior = priors,
+                 iter  = 5000, chains = 4, cores = 4)
+```
+
+I need to draw from the intercept parameters to estimate the number of unreported events. The `get_variables` function helps to look for the names of the appropriate model parameters.
+
+```{r find-varnames}
+get_variables(big_model) %>%
+    keep(~str_detect(., "[iI]ntercept"))
+```
+This time around, the model does a better job of estimating the true counts:
+
+```{r plot-big-model, fig.width = 11, fig.height = 7, fig.align="center", class.output="full-width", dpi = 200}
+big_model_estimates <- big_model %>%
+    spread_draws(r_event_class__main[class, param], b_main_Intercept) %>%
+    filter(param == "Intercept") %>% 
+    mutate(unreported_est = exp(r_event_class__main + b_main_Intercept)) %>% 
+    ungroup
+
+plot_estimates(actual    = actual_by_class,
+               reported  = reported_by_class,
+               estimates = big_model_estimates,
+               title     = "Event count estimates (with interactions)")
+```
+
+The `tidybayes` package includes functions `spread_draws` and `gather_draws` which return tidy draws from the posterior distribution of Stan models, and further allow you to select parameters to draw using regular expressions. First I'll find the template for the parameter names:
+
+```{r find-interaction-vars}
+get_variables(big_model) %>%
+    keep(~str_detect(., "interaction"))
+```
+
+Here I'll use a regular expression to draw samples of just the 2- and 3-way interaction effects. By plotting the first 100 draws, I see that the model correctly picked up on the underlying dependence structure.
+
+```{r plot-interactions, fig.height = 8, fig.width = 6, dpi = 200, fig.align = "center", class.output = "full-width"}
+interaction_draws <- gather_draws(
+    big_model,
+    `b_interaction_([^\\:]+\\:){1,2}[^\\:]+$`,
+    regex = TRUE
+) %>% ungroup
+
+interaction_draws <- interaction_draws %>%
+    mutate(.variable = str_replace(.variable, "^b_interaction_", ""))
+
+interaction_draws %>%
+    filter(.draw <=100) %>%
+    ggplot(aes(x = fct_rev(.variable), y = .value)) +
+    geom_point(alpha  = .1,
+               size   = .4,
+               stroke = NA) +
+    geom_hline(yintercept = 0, linetype = 2, size = .5) + 
+    coord_flip() +
+    ggtitle("2- and 3-way interaction effect estimates",
+            "100 parameter samples of each") + 
+    theme(panel.grid.major = element_line(
+                                size   = .1,
+                                colour = "grey25"
+                             ),
+          axis.title.x     = element_blank(),
+          axis.title.y     = element_blank())
+```
+

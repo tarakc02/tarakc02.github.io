@@ -3,5 +3,5 @@ _site
 .jekyll-metadata
 *.sublime-project
 .Rproj.user
-*/*_cache/**
+**/*_cache/**
 .Rhistory
