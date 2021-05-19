@@ -41,6 +41,7 @@ markdown: kramdown
 plugins:
   - jekyll-feed
 exclude:
+  - vendor
   - Gemfile
   - Gemfile.lock
   - tarakc02.github.io.sublime-project
