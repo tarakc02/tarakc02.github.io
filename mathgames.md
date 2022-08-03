@@ -6,7 +6,7 @@ title: TS - Writeups
 
 <h1>JUST WHATEVER</h1>
 - [Network Scale Up for estimating the size of hard-to-reach
-  subpopulations](https://github.com/tarakc02/network-scale-up/tree/master/write):
+  subpopulations](https://github.com/tarakc02/network-scale-up/blob/main/write/README.md):
   simulations and models for estimating population sizes via indirect survey
 - [GNU tools for data analysts](https://github.com/tarakc02/gnutools): Introducing some of the GNU utilities in a Unix terminal by way of analogies to the verbs of SQL, dplyr, etc.
 - [Branch and bound using lazily evaluated lists](/branch-and-bound): Implementing a branch-and-bound solver for the knapsack problem using lazily evaluated lists, and comparing performance of different approximation algorithms. 
