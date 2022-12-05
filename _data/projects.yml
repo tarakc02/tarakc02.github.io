@@ -1,3 +1,9 @@
+- name: PureFun.jl
+  github: tarakc02/PureFun.jl
+  description: Data structures from the book <i>Purely Functional Data
+    Structures</i> implemented in Julia. Documentation at
+    <a href="https://tarakc02.github.io/PureFun.jl">tarakc02.github.io/PureFun.jl</a>
+
 - name: ratelimitr
   github: tarakc02/ratelimitr
   description: An R package to constrain one or more functions. I made this to make it easier to build packages that utilize web APIs. It's now on <a href="https://cran.r-project.org/package=ratelimitr">CRAN</a>.

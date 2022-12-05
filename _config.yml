@@ -28,7 +28,7 @@ author:
 sections:
   - name: home
     link: index
-  - name: r-packages
+  - name: software
     link: projects
   - name: written
     link: mathgames
