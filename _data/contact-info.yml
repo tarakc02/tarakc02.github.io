@@ -2,12 +2,20 @@
   link: https://github.com/tarakc02/
   name: tarakc02
 
+- key: pinboard
+  link: https://pinboard.in/u:tarakc02
+  name: tarakc02
+
+- key:  spotify
+  link: https://open.spotify.com/user/tarakc02
+  name: tarakc02
+
 - key: twitter
   link: https://twitter.com/tarakc02
   name: tarakc02
 
-- key: pinboard
-  link: https://pinboard.in/u:tarakc02
+- key: mastadon
+  link: https://octodon.social/@tarakc02
   name: tarakc02
 
 - key:  professional
