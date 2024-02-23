@@ -6,24 +6,36 @@
 
 - name: ratelimitr
   github: tarakc02/ratelimitr
-  description: An R package to constrain one or more functions. I made this to make it easier to build packages that utilize web APIs. It's now on <a href="https://cran.r-project.org/package=ratelimitr">CRAN</a>.
+  description: An R package to constrain one or more functions. I made this to
+    make it easier to build packages that utilize web APIs. It's now on <a
+    href="https://cran.r-project.org/package=ratelimitr">CRAN</a>.
 
 - name: rmapzen
   github: tarakc02/rmapzen
-  description: An R package to work with the <a href="https://mapzen.com/documentation/">Mapzen API</a>. Thorough documentation (with examples) are available at <a href="https://tarakc02.github.io/rmapzen">the github pages site</a>. rmapzen is also <a href="https://cran.r-project.org/package=rmapzen">on CRAN</a>.
+  description: An R package to work with the <a
+    href="https://mapzen.com/documentation/">Mapzen API</a>. Thorough
+    documentation (with examples) are available at <a
+    href="https://tarakc02.github.io/rmapzen">the github pages site</a>.
+    rmapzen is also <a href="https://cran.r-project.org/package=rmapzen">on
+    CRAN</a>.
 
-- name: discoveryengine
-  github: cwolfsonseeley/discoveryengine
-  description: At my work, we created a tool to define populations of database entities using a simple predicate-based language. Documentation and examples at <a href="https://cwolfsonseeley.github.io/discodocs/">Disco Docs</a> (I've since left the University, and the project is being continued by my former team)
+- name: cacodes
+  github: tarakc02/cacodes
+  description: R package to programmatically pull text of laws from the <a
+    href="https://leginfo.legislature.ca.gov/">California legislature
+    website</a>
 
 - name: lazylist
   github: tarakc02/lazylist
-  description: An implementation of lazily evaluated lists for R, based on the description found in <i><a href="https://mitpress.mit.edu/sicp/full-text/book/book-Z-H-24.html">Structure and Interpretation of Computer Programs</a></i>. To see lazy lists in practice, <a href="/taxicab">Searching for taxicab numbers</a>
+  description: An implementation of lazily evaluated lists for R, based on the
+    description found in <i><a
+    href="https://mitpress.mit.edu/sicp/full-text/book/book-Z-H-24.html">Structure
+    and Interpretation of Computer Programs</a></i>. To see lazy lists in
+    practice, <a href="/taxicab">Searching for taxicab numbers</a>
 
-- name: rbst
-  github: tarakc02/rbst
-  description: Purely functional balanced search trees implemented in R. 
-  
 - name: puzzlr
   github: tarakc02/puzzlr
-  description: Tools for constructing, manipulating, and drawing tile-puzzles (helpful for learning about and experimenting with algorithms for solving tile puzzles -- for example, see <a href="/puzzle8">Solving the 8-puzzle with lazy evaluation</a>)
+  description: Tools for constructing, manipulating, and drawing tile-puzzles
+    (helpful for learning about and experimenting with algorithms for solving
+    tile puzzles -- for example, see <a href="/puzzle8">Solving the 8-puzzle
+    with lazy evaluation</a>)
